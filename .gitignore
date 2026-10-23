@@ -1,0 +1,7 @@
+/work/
+/evaluations/
+/reports/
+/outputs/
+*.draft.md
+.DS_Store
+Thumbs.db
