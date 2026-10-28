@@ -31,6 +31,19 @@ The update command above targets the global installation; use `-p` for a project
 
 For GitHub installations, the CLI records the source and compares the skill directory's content hash to detect updates. Detection does not depend on `metadata.version` or GitHub Releases. Run `skills check` to discover updates; changing a version number does not send notifications. Manually copied files are not automatically tracked by the CLI.
 
+## Testing a skill before release
+
+[`skill-canary`](skill-canary/) injects a copy of a skill directory into `~/.agents/skills` under a canary name (`<name>-canary`), rewrites the frontmatter `name` and `description` so agents list it as a distinct test build, and records a `.skill-canary.json` manifest for cleanup. This exercises the real skill loader—discovery, catalog listing, and triggering—before the skill is published:
+
+```sh
+npx skill-canary inject ./skills/<name>
+npx skill-canary list
+npx skill-canary refresh <name>-canary
+npx skill-canary clean <name>-canary
+```
+
+The source lives in [`skill-canary/`](skill-canary/) and is published to npm as [`skill-canary`](https://www.npmjs.com/package/skill-canary). Injected directories are plain folders, so the Vercel skills CLI does not track them and `skills check` stays clean.
+
 ## Versioning
 
 Each skill has its own version in the `SKILL.md` frontmatter, following the optional [Agent Skills metadata field](https://agentskills.io/specification#metadata-field):
