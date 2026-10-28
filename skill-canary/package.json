@@ -1,0 +1,32 @@
+{
+  "name": "skill-canary",
+  "version": "0.1.0",
+  "description": "Inject a test build of an Agent Skill into a skills directory under a canary name, with marker-based refresh and cleanup.",
+  "type": "module",
+  "bin": {
+    "skill-canary": "bin/skill-canary.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "agent-skills",
+    "skills",
+    "agentskills",
+    "testing",
+    "canary",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agoudbg/Skills.git",
+    "directory": "skill-canary"
+  },
+  "author": "agoudbg",
+  "license": "MIT"
+}
