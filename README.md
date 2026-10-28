@@ -8,6 +8,7 @@ Skills are written in English. Generated content follows the language requested 
 
 | Skill | Purpose |
 | --- | --- |
+| [Code2Doc](skills/code2doc/SKILL.md) | Create or update end-user documentation from a feature's implementation code, with reader-facing voice and leak protection. |
 | [Concise UI Copy](skills/ui-copy-restraint/SKILL.md) | Write necessary interface copy clearly when building or editing an interface. Avoid development commentary, redundant descriptions, and excessive explanation. |
 
 ## Installation and updates
