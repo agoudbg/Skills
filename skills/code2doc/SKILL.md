@@ -2,7 +2,7 @@
 name: code2doc
 description: Create or update end-user documentation from a feature's implementation code. Use it when writing user documentation for a feature, adding configuration walkthroughs, or realigning stale pages with current behavior. Applies to any product with user-facing entry points—CLI tools, chatbots, web panels—and turns code evidence into instructions written from the user's point of view while keeping internal implementation and business-sensitive details out of the page.
 metadata:
-  version: "0.1.0"
+  version: "0.1.3"
 ---
 
 # Code2Doc
@@ -45,7 +45,7 @@ State the feature in user terms first: what it is and where it is entered. If yo
 Then gather three kinds of evidence, each with a purpose:
 
 - Implementation code: the final authority on behavior, defaults, permission checks, and limit constants. Read it at the current checkout; never infer behavior from memory or commit messages.
-- User-visible strings: interface text, command help, error messages. They are the direct source of wording—names in the documentation must match them.
+- User-visible strings: interface text, command help, error messages. They are the direct source of wording—names in the documentation must match them. When a string's claim contradicts what the code actually does, behavior wins: keep the on-screen wording for names, document what really happens, and report the contradiction in the delivery report.
 - Public interface contracts: OpenAPI, MCP, CLI definitions. When the document mentions these interfaces, use only names and parameters that exist here.
 
 Evidence also sets the scope of the change: handle only user-perceivable behavior changes. Ask "did anything the user sees change?"—wording, entry point, order, limits, defaults, feedback. A refactor that moves warning logic into a shared module and renames functions, while everything users see stays the same, produces no documentation change; if the same change also reworded a notice from "removed from the group" to "restricted from speaking," the passage containing that notice must be updated. Purely internal refactors—renames, extracted functions, swapped storage—produce no documentation change.
@@ -74,15 +74,15 @@ When found, read the whole page and classify each passage as "still correct / st
 
 When updating a page, verify the whole text, not just the addition. Screenshots count together with prose: when a screenshot shows an old interface that no longer matches behavior, both the image and its passage are stale.
 
-Keep correct content in its original wording and structure; do not rewrite for rewriting's sake. Rewriting is not the goal—alignment with behavior is. Indiscriminate rewrites hide whether behavior actually changed from anyone reading the diff.
+Keep correct content in its original wording and structure; do not rewrite for rewriting's sake. Rewriting is not the goal—alignment with behavior is. Content that leaks internals or manages the reader's process is not correct content: fixing it is alignment, not stylistic rewriting. Indiscriminate rewrites hide whether behavior actually changed from anyone reading the diff.
 
-Create a new page only after confirming no existing page fits. Before creating, ask once more whether the content is a natural extension of an existing page. A new setting usually belongs on the feature's page, not on a page of its own—otherwise both readers and maintainers carry one more entry point.
+Create a new page only after confirming no existing page fits. Before creating, ask once more whether the content is a natural extension of an existing page. A new setting usually belongs on the feature's page, not on a page of its own—otherwise both readers and maintainers carry one more entry point. Adding, deleting, merging, or moving pages changes the docs site's architecture: do it only when the user explicitly asks; a batch optimization or rewrite is not a mandate to restructure.
 
 ### 4. Write and illustrate
 
 Write prose by the rules in [Abstraction boundary](#abstraction-boundary) and [Writing style](#writing-style); capture images by [Screenshots](#screenshots).
 
-Place a new page in the right section of the docs site's information architecture—judge by where similar features live. Find out how the site generates navigation (hand-written nav, derived from directories, front-end routing) and register the page where required. Link with neighboring pages: when a feature page's prerequisites mention panel administrator rights, link to the page that explains authorization instead of re-explaining it in place. Put links on the first mention itself, wrapping the words that point to the target: in "you need to set up a verification channel first," the phrase "set up a verification channel" is the link. Do not append connector sentences such as "see Set up a verification channel below." Page anchors and separate pages behave the same.
+Place a new page in the right section of the docs site's information architecture—judge by where similar features live, and match the feature's scope: a setting that follows the user's account across chats is user-side and never lives under a group or channel section; a channel-side setting belongs with the channel docs. When one family has a variant on another surface, document that variant with that surface's pages and cross-link between them. Find out how the site generates navigation (hand-written nav, derived from directories, front-end routing) and register the page where required. Link with neighboring pages: when a feature page's prerequisites mention panel administrator rights, link to the page that explains authorization instead of re-explaining it in place. Put links on the first mention itself, wrapping the words that point to the target: in "you need to set up a verification channel first," the phrase "set up a verification channel" is the link. Connector sentences such as "see Set up a verification channel below" or "for the steps, see Set up groups" are forbidden—when one appears, rewrite it: the link is already in place, the connector has no reason to exist. Page anchors and separate pages behave the same.
 
 ### 5. Validate and deliver
 
@@ -193,7 +193,7 @@ The second person must live in the sentence structure, not just the salutation. 
 
 ### Structure
 
-Title pages with verb-object phrases: "Enable join verification," "Set up a verification channel"—not "How to…" questions, and not nominalized titles like "Join Verification module overview." Readers arrive searching for something to get done, and the verb carries that purpose; in a directory, verb-object entries read as a list of what you can do, while question entries read like an FAQ. A page covering a whole feature uses the feature's primary action; a single-task page uses that task's verb.
+Title pages with verb-object phrases, quoting feature names as everywhere else: Enable "Join Verification" (启用“入群验证”), Set up "Verification channel" (设置“验证频道”). Not "How to…" questions, and not nominalized titles like "Join Verification module overview." The quotes follow the feature name into the frontmatter title, the page heading, and the navigation. Readers arrive searching for something to get done, and the verb carries that purpose; in a directory, verb-object entries read as a list of what you can do, while question entries read like an FAQ. A page covering a whole feature uses the feature's primary action; a single-task page uses that task's verb. Retitling a page or heading can break inbound anchors and external links: follow the docs repository's mechanism for keeping old targets reachable (heading IDs, anchor elements, redirects), and when no mechanism exists, list the retired targets in the delivery report.
 
 The opening paragraph answers in two or three sentences what the feature does and for whom, with no scene-setting, spoken directly to the reader. For example: "If your group is often troubled by ad accounts, enable join verification: new members must pass a check before they can speak." Knowing after the first paragraph whether this page is about them is the most basic courtesy a help document owes its reader.
 
@@ -201,7 +201,7 @@ Then arrange as needed: prerequisites, steps to enable or configure, results and
 
 ### Sentences and lists
 
-Prose is the default carrier. Ordered lists are for operation steps executed in sequence; unordered lists are for items that are genuinely parallel and hard to phrase as a sentence (a prerequisites list, for instance). Everything else is written as connected paragraphs; do not shred paragraphs into lists to look organized. "The feature has modes A, B, and C" split into three bullets looks tidy, but which mode suits which situation—exactly the part that needs causal phrasing—has nowhere to live once split.
+Prose is the default carrier. Ordered lists are for operation steps executed in sequence—troubleshooting and diagnostic procedures that must run in order count as steps too. Unordered lists are for items that are genuinely parallel and hard to phrase as a sentence (a prerequisites list, for instance); it is option-and-behavior groups that the unordered rule governs. Everything else is written as connected paragraphs; do not shred paragraphs into lists to look organized. "The feature has modes A, B, and C" split into three bullets looks tidy, but which mode suits which situation—exactly the part that needs causal phrasing—has nowhere to live once split.
 
 No marketing or evaluation (powerful, effortless, elegant), no explaining the obvious, no repeating what the title already said. Concise does not mean stripping sentences to their skeleton: phrases that carry the reader ("if you…", "once this step is done", "you can turn it off at any time") are navigation—keep them. What gets deleted is marketing language, repetition, and detail the reader cannot use. Parallel option-and-behavior descriptions always use an unordered list; reserve tables for true parameter comparisons—multi-row, multi-column specification grids where every column holds the same kind of attribute.
 
@@ -214,11 +214,15 @@ One action per step, starting with a verb, UI element names marked per the docs 
 
 State prerequisites before the steps, addressed to the reader ("before enabling, make sure you are a group administrator"), not inside them. Expected feedback must have evidence: when neither UI strings nor code confirms a detail like the switch changing color, drop the phrase—never patch it from imagination.
 
+### State consequences, don't choreograph the reader
+
+Cautions and warnings state consequences; they do not manage the reader's process for them. A consequence the reader cannot see in the interface or cannot undo on their own deserves one sentence: "Deleting a template cannot be undone, and features still referring to it will fail to send their messages." Stop there. "Before deleting, switch the affected features to another template; if the picker says the template was deleted, remove the stale entry or choose another template" crosses the line—once the reader knows the consequence, how to arrange around it is their decision. The document's job is to make the consequence clear. When an existing page contains such process-managing text, delete the choreography and keep the consequence sentence—this is alignment, not a rewrite.
+
 ### Terms and numbers
 
 Call one thing one name throughout, using the on-screen name; when the project has a glossary, the glossary wins. If the interface says "join verification," the document never drifts into "join review" or "join approval"—two names for one feature read as two features. Write numbers as concrete values with units: defaults, limits, durations, scope of effect. "Kept for a fairly long time" becomes "kept for 24 hours by default"—a number can be checked; a vague phrase cannot. Whether a concrete value may be published follows [business-sensitive information](#business-sensitive-information-stays-out-by-default).
 
-Mark feature names and UI elements, following the docs repository's established style: Chinese uses curly quotation marks (启用“入群验证”， 点按“创建 Token”), English capitalizes the official name (turn on Join Verification). The test is "these words appear on screen": mark references to a feature, menu, button, toggle, or page by its name; leave the same words unmarked when used as ordinary nouns or actions. Both uses can appear in one sentence—如果要创建关键词回复 (a thing you create) stays bare, 请点按“关键词回复” (the on-screen entry) is marked. Commands and text the user must type use backticks, never quotes. Use the same marker for the same kind of element throughout, and mark every occurrence, not just the first. In Chinese, always use curly quotes, with single curly quotes for a quotation inside a quotation; straight quotes appear only in code and English contexts. Leave one space between Chinese and letters or digits, following the docs repository's convention; link text participates in this rule like ordinary text—a link whose text starts or ends with letters or digits keeps the same space against adjacent Chinese, while pure-Chinese link text takes none.
+Mark feature names and UI elements, following the docs repository's established style: Chinese uses curly quotation marks (启用“入群验证”， 点按“创建 Token”), English capitalizes the official name (turn on Join Verification). The test is "these words appear on screen": mark references to a feature, menu, button, toggle, or page by its name; leave the same words unmarked when used as ordinary nouns or actions. The reverse mistake is quoting a noun because the sentence is about a product object: the configuration itself (导出和导入群组配置， never 导出和导入“群组配置”), what a command returns (查询消息元数据， not 查询“消息元数据”), a currency or concept (用星币赞助， not 用“星币”赞助), and the product's own name (开始使用 nmBot, never 开始使用“nmBot”) are not screen entries and stay bare. When unsure whether a quoted name is a real screen name, search the product's UI strings and glossary: a name that appears nowhere on screen is not a screen name—unquote it or look up the real one. Both uses can appear in one sentence—如果要创建关键词回复 (a thing you create) stays bare, 请点按“关键词回复” (the on-screen entry) is marked. Commands and text the user must type use backticks, never quotes. Use the same marker for the same kind of element throughout, and mark every occurrence, not just the first. In Chinese, always use curly quotes, with single curly quotes for a quotation inside a quotation; straight quotes appear only in code and English contexts. Leave one space between Chinese and letters or digits, following the docs repository's convention; link text participates in this rule like ordinary text—a link whose text starts or ends with letters or digits keeps the same space against adjacent Chinese, while pure-Chinese link text takes none.
 
 ## Examples
 
@@ -237,8 +241,8 @@ These examples show how code evidence lands as documentation. Adapt to the actua
 
 After writing, in order:
 
-1. Run the docs repository's formatting, build, and tests (including link and image checks); all must pass.
-2. Reread the draft with [Leak review](#leak-review); check every image against [Pre-insertion check](#pre-insertion-check).
+1. Run the docs repository's formatting, build, and tests (including link and image checks); all must pass. The docs site's build engine, plugins, scripts, and tests are not yours to modify: when a check fails, report the failure—never change the check or the tool to make it pass.
+2. Reread the draft with [Leak review](#leak-review); check every image against [Pre-insertion check](#pre-insertion-check). Then run mechanical checks on the finished text: a search for connector phrases ("see below", "for the steps, see", "see", 见下文, 具体步骤见， 参见) must return nothing; Chinese prose contains no straight quotes—a raw search also hits syntax such as HTML attributes, admonition or callout titles, inline code, frontmatter, and URLs, so exclude those classes and require zero hits in the remaining prose; feature names in titles carry their quotes, and every quoted name appears verbatim in the product's UI strings or approved glossary; spot-check conditional clauses for a subject. Fix any hit before delivering.
 3. Report to the user: the list of changed files; the mapping from key behavior statements to evidence; items that could not be confirmed from code and need a human; the code revision the writing was based on.
 
 The evidence mapping in the report corresponds entry by entry to the behavior inventory, for example:
