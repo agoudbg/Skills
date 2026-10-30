@@ -2,12 +2,14 @@
 name: ui-copy-restraint
 description: Decide which copy is needed and how to express it clearly when building an application interface from scratch, editing one, or reviewing it. Avoid development commentary, redundant descriptions, and excessive explanation when generating copy, and simplify them in existing interfaces. Applies to pages, forms, settings, dialogs, feedback, and empty states.
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Concise UI Copy
 
 Control the amount of interface text while ensuring that users understand actions and their consequences, whether building a new interface or editing an existing one.
+
+This skill governs interface copy and does not prescribe a visual style. Follow the project's visual and interaction design requirements, adjusting containers and spacing affected by copy changes.
 
 Do not add descriptions by default to new interfaces. When editing an interface, retain necessary copy and simplify or remove unnecessary text.
 
@@ -120,6 +122,8 @@ Once content is needed, express it briefly and completely. Apply these technique
 - Omit subjects already clear from context: in upload status text, replace "The system is uploading files" with "Uploading files."
 - Avoid explaining the same meaning twice: replace "The link expires in 7 days and can no longer be used after it expires" with "Link expires in 7 days."
 - When a limit needs explaining, preserve its quantity and scope: replace "You can select and upload a maximum of 10 files at a time" with "Upload up to 10 files at a time." This does not require repeating a limit the interface already makes clear.
+
+Avoid using middle dots, dashes, semicolons, or similar separators to string unrelated messages and supporting explanations together on one line. Assess each piece of information separately for necessity and place it where it is relevant. Preserve related metadata that helps users scan, along with normal punctuation that follows the language and product conventions.
 
 Do not impose a fixed word count on all copy. When conditions or consequences matter, prioritize complete meaning that users can understand on the first read.
 
