@@ -1,8 +1,8 @@
 ---
 name: ui-copy-restraint
-description: Decide which copy is needed and how to express it clearly when building an application interface from scratch, editing one, or reviewing it. Avoid development commentary, redundant descriptions, and excessive explanation when generating copy, and simplify them in existing interfaces. Applies to pages, forms, settings, dialogs, feedback, and empty states.
+description: Decide which copy is needed and how to express it clearly when building an application interface from scratch, editing one, or reviewing it. Avoid development commentary, redundant descriptions, and excessive explanation when generating copy, and simplify them in existing interfaces. Applies to pages, forms, settings, dialogs, notifications, feedback, and empty states.
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # Concise UI Copy
@@ -13,7 +13,7 @@ This skill governs interface copy and does not prescribe a visual style. Follow 
 
 Do not add descriptions by default to new interfaces. When editing an interface, retain necessary copy and simplify or remove unnecessary text.
 
-Consider the intended audience, current task, surrounding interface, and confirmed product behavior. Follow the product's established language, terminology, and voice.
+Consider the intended audience, current task, surrounding interface, and confirmed product behavior. Follow the product's established language, terminology, and voice. Apply explicit terminology corrections across related labels, dialogs, notifications, and translations, respecting each locale's punctuation conventions.
 
 ## Decide whether text is needed
 
@@ -76,6 +76,14 @@ If a page already has "Images," "Videos," and "Audio" categories, omit "Browse b
 
 If a file table already has "Name," "Size," and "Modified" columns, omit "The table below shows the name, size, and modification time of each file."
 
+When the page already establishes the current group or workspace, "Manage requests" may be sufficient. Retain the object or scope where users could otherwise confuse destinations.
+
+### Omit prerequisites already clear from context
+
+When a parent setting, section, or control availability clearly establishes a prerequisite, omit repeating "When X is enabled" in each child setting's description. Judge what users can actually infer; a disabled control by itself may not explain why it is unavailable.
+
+After removing the repeated condition, check the rest against the label and nearby content. Keep useful consequences or limitations, and omit the whole description if it adds nothing. Explain a dependency once where it matters if the interface does not make it clear.
+
 ### Show information where and when it matters
 
 Once information is needed, choose its location and duration. Explain input requirements beside the field, consequences before the relevant action, and failures where users can recover. Details that matter only for a particular choice or state should appear when it applies. Keep text visible throughout a task only when it remains useful throughout that task.
@@ -83,6 +91,8 @@ Once information is needed, choose its location and duration. Explain input requ
 For example, show a pagination range when users navigate a partial list. A short list already showing every item and its total does not also need a range summary. The information is valid in both states, but useful in only one.
 
 If a file picker already says "PNG and JPG supported," do not repeat it at the bottom of the page. An error after selecting an unsupported file may repeat the format requirement.
+
+Place a background query-range note near the list it qualifies, using the product's existing footer convention when appropriate. Keep a deadline that affects submission visible before the action.
 
 Do not move redundant copy wholesale into tooltips, disclosures, or help links. Use on-demand explanations for useful optional detail. Keep information needed to avoid a mistake visible before the user commits the action.
 
@@ -99,6 +109,16 @@ Add supporting text when the label cannot convey the complete meaning. Do not cr
 - If a toggle enables notifications after downloads finish, use "Notify me when downloads finish." There is no need to explain that disabling it stops those notifications.
 - If notifications are sent only when someone mentions the user in a comment, label the toggle "Notify me when I'm mentioned in a comment." There is no need for "Comment notifications" followed by "When enabled, the app sends a notification when someone mentions you in a comment. Comments that do not mention you will not trigger a notification." The label states the trigger, so the paragraph is unnecessary.
 
+## Match copy to the current state
+
+Check the states the product actually supports. Wording that helps before an action can become misleading afterward.
+
+- Show prerequisite guidance while it helps users enable or restore a feature. A reminder to enable activity recording may belong below a disabled review toggle; remove it once reviews are enabled if it no longer helps. Keep warnings about consequences before disabling a dependency.
+- After a request is processed, show the actual result rather than leaving disabled decision buttons as the only indication of its outcome. Replace obsolete labels such as "Review deadline" with "Reviewed at" when the completion time is what users now need. Keep valid follow-up and retry actions.
+- Distinguish "No requests yet" from "No requests match these filters." Choose the empty state from the current query, and preserve any available way to change or clear the filters.
+
+Avoid standalone success notices named after internal execution stages. If an intermediate step affects recovery, fold its user-visible effect into the result without implying that the whole operation succeeded.
+
 ## Preserve necessary information
 
 Retain facts that affect the decision or action at hand, such as costs, deletion scope, access permissions, irreversible consequences, and non-obvious conditions for a change to take effect. These categories do not require standing notices elsewhere in the interface.
@@ -108,6 +128,8 @@ State the consequence and any choice the user needs to make. Include the underly
 Preserve necessary labels, input requirements, recovery guidance, and accessible names. Do not move essential information exclusively into placeholders or hover content to reduce visible text.
 
 Copy must reflect confirmed product behavior. Do not invent promises about saving, synchronization scope, recoverability, or other unconfirmed behavior.
+
+For notifications read away from the application, check whether the recipient can identify what happened, what it affects, and how to continue. Identify the decision maker or destination when similar requests go to different parties. For example, if a restriction was lifted but users must still rejoin a group themselves, state the result and the supported way to rejoin.
 
 - If deleting an account also deletes cloud files and cannot be undone, state both consequences in the confirmation. "Delete account?" alone is insufficient.
 - If save feedback is needed, "Saved" may be sufficient. Explain storage scope when users need it to judge availability elsewhere. Never imply synchronization unless it is confirmed.
@@ -136,6 +158,7 @@ These examples show which copy can be omitted, which needs simplifying, and whic
 | Development commentary enters the product | A page corner says, "This iteration completes the navigation structure improvements, with key actions now standardized to a high-contrast visual specification." | Remove the entire passage. It describes development work. |
 | An obvious page receives a generic introduction | Below the "Members" heading: "View and manage your team members in one place, with flexible control over each member's role and access permissions." A member list and role selectors are already visible below. | Remove this repeated explanation. If a role has permission restrictions that are not apparent, explain them at the role selector. |
 | Both toggle states are mechanically explained | "When enabled, the system automatically sends meeting notes to participants after each meeting. When disabled, automatic sending stops, and you can still send notes manually as needed." | If this behavior is confirmed, use "Send notes to participants after meetings" as the label. Omit supporting copy if the manual sending action is already clearly visible. |
+| Child settings repeat a parent prerequisite | In an "Activity logging" section, child controls are visibly unavailable until logging is enabled. "Record member status changes" has the description "When activity logging is enabled, this may produce many records." | Remove the repeated prerequisite. Keep "This may produce many records" if volume matters to the decision. If the remaining information is already apparent, omit the description. |
 | Shortening would mislead | A download cleanup confirmation says, "Downloaded files will be deleted from this device. Files in the cloud will be kept." | Preserve the deletion scope and the fact that cloud files remain. Wording may change, but do not reduce it to "Confirm cleanup?" |
 | Technical information is part of the task | A developer tool says, "Connection failed: the certificate has expired." | Preserve the specific cause. Do not replace it with "Unable to connect right now" merely because the information is technical. |
 | Accurate technical information adds no useful guidance | Below an "Export images" button: "Images are encoded in a background worker before the archive is assembled." | Omit the explanation. It does not help users choose or complete the export, even in a developer tool. |
@@ -148,10 +171,12 @@ Review the pages and states as users encounter them:
 
 - Which text matters only to developers or reviewers?
 - What misunderstanding or blocked action does each explanation prevent at this point?
-- Which facts are repeated across labels, controls, content, and feedback?
+- Which facts, including prerequisites, are already conveyed by labels, groups, control availability, content, or feedback?
 - Which notices belong only to a particular choice, action, or state?
+- Do prerequisite reminders, time labels, results, and empty states still make sense after the relevant state changes?
 - Are short badges, summaries, and footer notes adding clutter without helping the current task?
 - Do labels state the action and its scope directly, without omitting necessary conditions?
+- Can recipients understand a standalone notification's subject, outcome, and next action without seeing the originating page?
 - Can users spot the main actions and important limitations without reading every description?
 - Has removing copy left empty description containers or awkward spacing?
 
